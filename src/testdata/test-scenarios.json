@@ -1,0 +1,49 @@
+{
+  "loginScenarios": [
+    {
+      "id": "valid-login",
+      "description": "Login with valid credentials",
+      "username": "valid_user@example.com",
+      "password": "ValidPassword123!",
+      "expectedResult": "success"
+    },
+    {
+      "id": "invalid-email",
+      "description": "Login with invalid email format",
+      "username": "invalid-email",
+      "password": "SomePassword123!",
+      "expectedResult": "error",
+      "expectedMessage": "Please enter a valid email address"
+    },
+    {
+      "id": "invalid-password",
+      "description": "Login with incorrect password",
+      "username": "valid_user@example.com",
+      "password": "WrongPassword",
+      "expectedResult": "error",
+      "expectedMessage": "Invalid credentials"
+    },
+    {
+      "id": "empty-credentials",
+      "description": "Login with empty credentials",
+      "username": "",
+      "password": "",
+      "expectedResult": "error",
+      "expectedMessage": "Email and password are required"
+    }
+  ],
+  "dashboardScenarios": [
+    {
+      "id": "navigate-to-app1",
+      "description": "Navigate from Brivo dashboard to App1",
+      "app": "app1",
+      "expectedUrl": "/app1"
+    },
+    {
+      "id": "navigate-to-app2",
+      "description": "Navigate from Brivo dashboard to App2",
+      "app": "app2",
+      "expectedUrl": "/app2"
+    }
+  ]
+}

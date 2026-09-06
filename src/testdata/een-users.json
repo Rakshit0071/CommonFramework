@@ -1,0 +1,118 @@
+{
+  "description": "Eagle Eye Networks test users for different test scenarios",
+  "apiAuth": {
+    "clientSecret": "QVVUTy1URVNUOkJ4IzlLNG1hRiF3bXdfJEhOUUxL"
+  },
+  "users": {
+    "defaultEndUser": {
+      "email": "een.web3.auto+empty@gmail.com",
+      "password": "7zBJrbnSCQNDuwG",
+      "role": "end_user",
+      "description": "Default end user for general testing"
+    },
+    "staticNonAdminDefault": {
+      "email": "een.web3.auto+static_nonadmindefault@gmail.com",
+      "password": "7zBJrbnSCQNDuwG",
+      "role": "non_admin",
+      "description": "Static non-admin default user"
+    },
+    "swapEndUser": {
+      "email": "een.web3.auto+swap@gmail.com",
+      "password": "7zBJrbnSCQNDuwG",
+      "role": "end_user",
+      "description": "User for swap testing scenarios"
+    },
+    "ts01Admin": {
+      "email": "een.web3.auto+ts01@gmail.com",
+      "password": "7zBJrbnSCQNDuwG",
+      "role": "admin",
+      "description": "TS01 admin user"
+    },
+    "ultlEndUser": {
+      "email": "een.web3.auto+crudultl@gmail.com",
+      "password": "7zBJrbnSCQNDuwG",
+      "role": "end_user",
+      "description": "ULTL/CRUD testing user"
+    },
+    "brandingReseller": {
+      "email": "een.web3.auto+branding@gmail.com",
+      "password": "7zBJrbnSCQNDuwG",
+      "role": "reseller",
+      "description": "Branding reseller user"
+    },
+    "brandingEndUser": {
+      "email": "een.web3.auto+enduserbranding@gmail.com",
+      "password": "7zBJrbnSCQNDuwG",
+      "role": "end_user",
+      "description": "Branding end user"
+    },
+    "staticEndUser": {
+      "email": "een.web3.auto+static@gmail.com",
+      "password": "7zBJrbnSCQNDuwG",
+      "role": "end_user",
+      "description": "Static end user for regression testing"
+    },
+    "crud1EndUser": {
+      "email": "een.web3.auto+crud1@gmail.com",
+      "password": "7zBJrbnSCQNDuwG",
+      "role": "end_user",
+      "description": "CRUD test user 1"
+    },
+    "crud2EndUser": {
+      "email": "een.web3.auto+crud2@gmail.com",
+      "password": "7zBJrbnSCQNDuwG",
+      "role": "end_user",
+      "description": "CRUD test user 2"
+    },
+    "crud3EndUser": {
+      "email": "een.web3.auto+crud3@gmail.com",
+      "password": "7zBJrbnSCQNDuwG",
+      "role": "end_user",
+      "description": "CRUD test user 3"
+    },
+    "testUser": {
+      "email": "lszczepaniuk+web2endusercrudultl@een.com",
+      "password": "7zBJrbnSCQNDuwG",
+      "role": "end_user",
+      "description": "General test user"
+    }
+  },
+  "userGroups": {
+    "allEndUsers": [
+      "defaultEndUser",
+      "swapEndUser",
+      "ultlEndUser",
+      "brandingEndUser",
+      "staticEndUser",
+      "crud1EndUser",
+      "crud2EndUser",
+      "crud3EndUser",
+      "testUser"
+    ],
+    "crudUsers": [
+      "crud1EndUser",
+      "crud2EndUser",
+      "crud3EndUser",
+      "ultlEndUser"
+    ],
+    "brandingUsers": [
+      "brandingReseller",
+      "brandingEndUser"
+    ],
+    "adminUsers": [
+      "ts01Admin"
+    ],
+    "staticUsers": [
+      "staticNonAdminDefault",
+      "staticEndUser"
+    ]
+  },
+  "testScenarios": {
+    "login": "defaultEndUser",
+    "crud": "crudUsers",
+    "branding": "brandingUsers",
+    "swap": "swapEndUser",
+    "admin": "ts01Admin",
+    "regression": "staticEndUser"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "name": "brivo-test-automation-framework",
+  "version": "1.0.0",
+  "description": "TypeScript + Playwright test automation framework for Brivo and sub-applications",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:brivo": "playwright test tests/brivo",
+    "test:app1": "playwright test tests/app1",
+    "test:app2": "playwright test tests/app2",
+    "test:app3": "playwright test tests/app3",
+    "test:app4": "playwright test tests/app4",
+    "test:app5": "playwright test tests/app5",
+    "test:app6": "playwright test tests/app6",
+    "test:app7": "playwright test tests/app7",
+    "test:debug": "playwright test --debug",
+    "report": "playwright show-report",
+    "ui": "playwright test --ui"
+  },
+  "keywords": [
+    "playwright",
+    "typescript",
+    "test-automation",
+    "pom",
+    "brivo"
+  ],
+  "author": "jeevan.g@een.com",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.48.0",
+    "@types/node": "^22.5.5",
+    "typescript": "^5.6.2"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "winston": "^3.14.2"
+  }
+}

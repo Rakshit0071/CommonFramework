@@ -1,0 +1,44 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "role": "admin",
+      "username": "admin@brivo.com",
+      "password": "Admin123!",
+      "firstName": "Admin",
+      "lastName": "User",
+      "email": "admin@brivo.com",
+      "permissions": ["all"]
+    },
+    {
+      "id": 2,
+      "role": "standard_user",
+      "username": "user@brivo.com",
+      "password": "User123!",
+      "firstName": "Standard",
+      "lastName": "User",
+      "email": "user@brivo.com",
+      "permissions": ["read", "write"]
+    },
+    {
+      "id": 3,
+      "role": "readonly_user",
+      "username": "readonly@brivo.com",
+      "password": "ReadOnly123!",
+      "firstName": "ReadOnly",
+      "lastName": "User",
+      "email": "readonly@brivo.com",
+      "permissions": ["read"]
+    },
+    {
+      "id": 4,
+      "role": "app1_user",
+      "username": "app1user@brivo.com",
+      "password": "App1User123!",
+      "firstName": "App1",
+      "lastName": "User",
+      "email": "app1user@brivo.com",
+      "permissions": ["app1_access"]
+    }
+  ]
+}
