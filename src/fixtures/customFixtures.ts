@@ -1,16 +1,22 @@
 import { test as base, Page } from '@playwright/test';
-import { BrivoLoginPage } from '../pages/brivo/LoginPage';
-import { BrivoDashboardPage } from '../pages/brivo/DashboardPage';
-import { App1LoginPage } from '../pages/app1/App1LoginPage';
-import { App1HomePage } from '../pages/app1/App1HomePage';
+import { GmailPage } from '../pages/gmail/pages/GmailPage';
+import { EENPage } from '../pages/een/pages/EENPage';
 import { Logger } from '../core/Logger';
+import { EENHelper } from '../core/EENHelper';
+import { GmailHelper } from '../core/GmailHelper';
+import { ActionHelper } from '../core/ActionHelper';
+import { WaitHelper } from '../core/WaitHelper';
+import { DataGenerator } from '../utils/DataGenerator';
 
 type CustomFixtures = {
   logger: Logger;
-  brivoLoginPage: BrivoLoginPage;
-  brivoDashboardPage: BrivoDashboardPage;
-  app1LoginPage: App1LoginPage;
-  app1HomePage: App1HomePage;
+  gmailPage: GmailPage;
+  eenPage: EENPage;
+  gmailHelper: GmailHelper;
+  eenHelper: EENHelper;
+  actionHelper: ActionHelper;
+  waitHelper: WaitHelper;
+  dataGenerator: typeof DataGenerator;
 };
 
 /**
@@ -24,24 +30,38 @@ export const test = base.extend<CustomFixtures>({
     logger.info('Test completed');
   },
 
-  brivoLoginPage: async ({ page }, use) => {
-    const brivoLoginPage = new BrivoLoginPage(page);
-    await use(brivoLoginPage);
+  gmailPage: async ({ page }, use) => {
+    const gmailPage = new GmailPage(page);
+    await use(gmailPage);
   },
 
-  brivoDashboardPage: async ({ page }, use) => {
-    const brivoDashboardPage = new BrivoDashboardPage(page);
-    await use(brivoDashboardPage);
+  eenPage: async ({ page }, use) => {
+    const eenPage = new EENPage(page);
+    await use(eenPage);
   },
 
-  app1LoginPage: async ({ page }, use) => {
-    const app1LoginPage = new App1LoginPage(page);
-    await use(app1LoginPage);
+  gmailHelper: async ({ page }, use) => {
+    const gmailHelper = new GmailHelper(page);
+    await use(gmailHelper);
   },
 
-  app1HomePage: async ({ page }, use) => {
-    const app1HomePage = new App1HomePage(page);
-    await use(app1HomePage);
+  eenHelper: async ({ page }, use) => {
+    const eenHelper = new EENHelper(page);
+    await use(eenHelper);
+  },
+
+  actionHelper: async ({ page }, use) => {
+    const actionHelper = new ActionHelper(page);
+    await use(actionHelper);
+  },
+
+  waitHelper: async ({ page }, use) => {
+    const waitHelper = new WaitHelper(page);
+    await use(waitHelper);
+  },
+
+  dataGenerator: async ({}, use) => {
+    await use(DataGenerator);
   },
 });
 

@@ -1,6 +1,5 @@
 node_modules/
 dist/
-test-results/
 playwright-report/
 playwright/.cache/
 .env
@@ -10,11 +9,14 @@ playwright/.cache/
 package-lock.json
 yarn.lock
 
-# App output directories
-app/logfiles/*.log
-app/screenshots/*.png
-app/screenshots/*.jpg
-app/reports/*
-!app/logfiles/.gitkeep
-!app/screenshots/.gitkeep
-!app/reports/.gitkeep
+# Test output directories
+test-outputs/
+!test-outputs/.gitkeep
+
+# Allure Reports
+allure-results/
+allure-report/
+
+# Authentication state (do not commit!)
+.auth/
+!.auth/.gitkeep
