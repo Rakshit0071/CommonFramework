@@ -1,223 +1,138 @@
-# TypeScript Playwright Test Automation Framework
+# CommonFramework
 
-**Professional test automation framework using TypeScript + Playwright with Gmail/Google Services as demonstration**
+**TypeScript + Playwright test automation monorepo for Brivo and its 8 applications**
 
----
-
-## 🎯 Quick Overview
-
-This framework demonstrates a **scalable, maintainable test automation architecture** using:
-- **Main Application:** Gmail (login portal)
-- **Sub-Applications:** Calendar, Sheets, Docs, Drive, Slides, Chat
-- **Pattern:** Page Object Model (POM)
-- **Authentication:** StorageState (no repeated logins)
+Demonstrated today against Gmail/Google Workspace (Gmail, Calendar, Sheets,
+Docs, Drive, Slides, Chat) and the real Eagle Eye Networks (EEN) app, mirroring
+the real target: Brivo (main) + EEN + 6 more applications.
 
 ---
 
-## ⚡ Quick Start
-
-### 1. Install Dependencies
-```bash
-npm install
-npx playwright install
-```
-
-### 2. Setup Authentication (One Time)
-```bash
-npm run auth:setup
-```
-- Browser opens
-- Login to Gmail
-- Auth saved automatically
-
-### 3. Run Tests
-```bash
-# Run all tests
-npm test
-
-# Run specific app
-npm run test:gmail
-npm run test:calendar
-npm run test:sheets
-```
-
-### 4. View Results
-```bash
-# View beautiful Allure report
-npm run test:allure          # Run tests + generate + open report
-
-# Or step-by-step:
-npm run allure:generate      # Generate report
-npm run allure:open          # Open at http://localhost:45678
-
-# Check logs
-cat test-outputs/logs/combined.log
-```
-
----
-
-## 📁 Framework Structure
+## Structure
 
 ```
-TypescriptFramework/
-├── src/
-│   ├── tests/          # Test files (Gmail, Calendar, etc.)
-│   ├── pages/          # Page Objects (POM)
-│   ├── core/           # Helper classes
-│   ├── fixtures/       # Playwright fixtures
-│   ├── config/         # Configuration files
-│   └── utils/          # Utility functions
-│
-├── test-outputs/       # Test results
-│   ├── reports/        # HTML & JSON reports
-│   ├── screenshots/    # Screenshots
-│   ├── videos/         # Test videos
-│   ├── logs/           # Execution logs
-│   └── traces/         # Debug traces
-│
-├── .auth/              # Authentication state
-└── z-documents/FRAMEWORK_DOCUMENTATION.md  # Complete guide
+CommonFramework/
+├── packages/                 # shared, versioned-together framework code
+│   ├── test-utils/           # Logger, ActionHelper, WaitHelper, AssertionHelper,
+│   │                         # BrowserManager, DataGenerator and friends, shared types
+│   ├── ui-components/        # BasePage, BaseComponent, AppLauncher, LayoutAssertions, CSSAssertions
+│   ├── auth/                 # multi-role StorageState setup, SessionManager (API token cache)
+│   └── api-helpers/          # BaseAPI, AuthAPI, UsersAPI
+├── apps/                     # one package per application under test
+│   ├── gmail/   ├── een/   ├── calendar/   ├── sheets/
+│   └── docs/    ├── drive/ ├── slides/     └── chat/
+│       package.json, tsconfig.json, playwright.config.ts, .auth/ (gitignored),
+│       src/{config, pages/{locators,pages}, fixtures, helpers}, tests/
+├── scripts/                  # ensure-output (CI guard), sanitize-logs, notify
+├── LOCATOR_CONTRACT.md       # data-testid governance between QA and dev teams
+└── .github/workflows/        # CI
 ```
 
----
-
-## 🧪 Available Tests
-
-| Application | Command | Test File |
-|-------------|---------|-----------|
-| Gmail | `npm run test:gmail` | gmail.spec.ts |
-| Calendar | `npm run test:calendar` | calendar.spec.ts |
-| Sheets | `npm run test:sheets` | sheets.spec.ts |
-| Docs | `npm run test:docs` | docs.spec.ts |
-| Drive | `npm run test:drive` | drive.spec.ts |
-| Slides | `npm run test:slides` | slides.spec.ts |
-| Chat | `npm run test:chat` | chat.spec.ts |
+Each app is an independent pnpm workspace package with its own
+`playwright.config.ts`, so apps can run, fail, and scale independently.
+Shared logic lives once in `packages/*` and is consumed via workspace
+dependencies (`@common/test-utils`, `@common/ui-components`, `@common/auth`,
+`@common/api-helpers`) — no copy-pasted helpers across apps.
 
 ---
 
-## 🎯 Key Features
+## Quick Start
 
-✅ **Page Object Model** - Clean separation of test logic and page elements  
-✅ **StorageState Auth** - 10x faster (no login UI)  
-✅ **Auto-Injection** - Fixtures provide ready-to-use objects  
-✅ **Complete Logging** - Track every step  
-✅ **Screenshot Capture** - Auto-capture on failure  
-✅ **Type Safety** - Full TypeScript support  
-✅ **Scalable Structure** - Easy to add new apps/tests  
-
----
-
-## 📖 Documentation
-
-**Complete Framework Documentation:** [z-documents/FRAMEWORK_DOCUMENTATION.md](z-documents/FRAMEWORK_DOCUMENTATION.md)
-
-Covers:
-- Framework architecture
-- How it works
-- How to adapt for Brivo
-- Complete structure guide
-- Design patterns used
-- Best practices
-
----
-
-## 🚀 Test Commands
+### 1. Install
 
 ```bash
-# Authentication
-npm run auth:setup          # Setup Gmail auth (one time)
+corepack enable                 # one-time, enables pnpm via Node's built-in corepack
+pnpm install
+pnpm --filter @app/gmail exec playwright install --with-deps chromium
+```
 
-# Run Tests
-npm test                    # All tests
-npm run test:headed         # With browser visible
-npm run test:debug          # Debug mode
-npm run ui                  # Playwright UI mode
+### 2. Set up authentication (once per app)
 
-# Reports
-npm run report              # View HTML report
+```bash
+pnpm --filter @app/gmail auth:setup   # single personal account, no roles
+pnpm --filter @app/een auth:setup     # admin/standard/readonly roles, see .env.example
+```
+
+### 3. Run tests
+
+```bash
+pnpm test                 # every app
+pnpm test:gmail           # one app
+pnpm --filter @app/een test:admin       # EEN's admin-role project only
+pnpm --filter @app/gmail test:headed    # headed, for debugging
+```
+
+### 4. Type-check / lint everything
+
+```bash
+pnpm typecheck
+pnpm lint
+```
+
+### 5. Reports
+
+```bash
+pnpm allure:generate && pnpm allure:open
+# Each app also writes: apps/<app>/test-outputs/{reports,logs,screenshots,traces}
 ```
 
 ---
 
-## 🎨 Framework Pattern
+## Key features
 
-**Main App + Sub-Apps Pattern**
-
-```
-Gmail (Main - Login Portal)
-   ↓ After login, access:
-   ├── Calendar
-   ├── Sheets
-   ├── Docs
-   ├── Drive
-   ├── Slides
-   └── Chat
-```
-
-**Mirrors Real-World Structure:**
-```
-Brivo (Main - Access Control Portal)
-   ↓ After login, access:
-   ├── EEN (Eagle Eye Networks)
-   ├── App 2
-   ├── App 3
-   └── ...
-```
+- **Page Object Model** per app, composing shared `BaseComponent` widgets
+  (e.g. `AppLauncher` for cross-app navigation) instead of reimplementing them.
+- **StorageState auth**, multi-role where the app has real roles (EEN:
+  admin/standard/readonly). See `packages/auth`.
+- **SessionManager** caches API auth tokens per username so a run makes one
+  token call per role, not one per test — safe across Playwright's parallel
+  worker processes via a small file-backed cache.
+- **Three-tier visual testing**: `LayoutAssertions` (structural, boundingBox),
+  `CSSAssertions` (computed-style), `toHaveScreenshot()` (pixel regression) —
+  see `apps/gmail/tests/gmail.login.spec.ts` for all three in use.
+- **`@parallel` / `@serial` tagging** — fast parallel lane by default, a
+  single-worker lane for anything that mutates shared state.
+- **`NO_SCREENSHOT_ON_FAILURE=1`** — skip failure screenshots locally for
+  speed; always on in CI.
+- **CI**: GitHub Actions matrix over all 8 apps × shards, JUnit + Allure +
+  HTML reports, a guard step that fails the job if a crashed runner produced
+  no output, and credential stripping before artifact upload.
 
 ---
 
-## 🔄 Adapting for Your Project
+## Locator rules
 
-This framework uses **Gmail/Google** as a demonstration.
-
-To adapt for **Brivo** or any other application:
-1. Replace `gmail` with your main app name
-2. Update sub-app folders (calendar → een, sheets → app2, etc.)
-3. Update page objects with your app's locators
-4. Update config files with your URLs
-5. Keep the same structure!
-
-**See:** [z-documents/FRAMEWORK_DOCUMENTATION.md](z-documents/FRAMEWORK_DOCUMENTATION.md) for detailed migration guide
+Every locator is suffixed `_L` (static), `_LT` (template), or `_SL` (scope
+container), and `data-testid` is the only contracted selector for real Brivo
+apps (the third-party Google demo apps are the one documented exception).
+Full rules, the dev-team forbidden list, and merge order: **[LOCATOR_CONTRACT.md](LOCATOR_CONTRACT.md)**.
 
 ---
 
-## 📊 Test Results Location
+## Adding a new application
 
-```
-test-outputs/
-├── reports/index.html          # ← Open in browser
-├── screenshots/                # Test screenshots
-├── videos/                     # Test recordings
-├── logs/combined.log           # Complete logs
-└── traces/                     # Debug traces
-```
-
----
-
-## 🛠️ Tech Stack
-
-- **Playwright** - Browser automation
-- **TypeScript** - Type safety
-- **Node.js** - Runtime
-- **Winston** - Logging
-- **Page Object Model** - Design pattern
-- **Fixtures** - Dependency injection
+1. `cp -r apps/calendar apps/<new-app>` as a starting skeleton (it's the
+   smallest one).
+2. Update its `package.json` name, `playwright.config.ts` baseURL/roles, and
+   locators/page objects for the real app.
+3. Add it to `.github/workflows/playwright.yml`'s matrix.
+4. Add a `data-testid`-based locator file and read `LOCATOR_CONTRACT.md`
+   before your first PR against the dev team's components.
 
 ---
 
-## 📧 Author
+## Further reading
 
-**Jeevan Kumar**  
-Email: jeevan.g@een.com
+- [z-documents/FRAMEWORK_DOCUMENTATION.md](z-documents/FRAMEWORK_DOCUMENTATION.md) —
+  original architecture deep-dive (POM, fixtures, DI). Predates the monorepo
+  conversion; paths/commands there are historical, concepts still apply.
 
 ---
 
-## 📄 License
+## Author
+
+**Jeevan Kumar** — jeevan.g@brivo.com
+
+## License
 
 ISC
-
----
-
-**🎉 Ready to start testing!**
-
-**See [z-documents/FRAMEWORK_DOCUMENTATION.md](z-documents/FRAMEWORK_DOCUMENTATION.md) for complete guide.**

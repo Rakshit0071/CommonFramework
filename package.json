@@ -1,35 +1,36 @@
 {
-  "name": "brivo-test-automation-framework",
-  "version": "1.0.0",
-  "description": "TypeScript + Playwright test automation framework for Brivo and sub-applications",
-  "main": "index.js",
+  "name": "common-framework",
+  "version": "2.0.0",
+  "private": true,
+  "description": "pnpm monorepo: shared TypeScript + Playwright automation framework and its 8 application test suites",
+  "packageManager": "pnpm@12.8.1",
   "scripts": {
-    "auth:setup": "npx ts-node src/setup/auth.setup.ts",
-    "test": "playwright test",
-    "test:headed": "playwright test --headed",
-    "test:gmail": "playwright test src/tests/gmail --headed",
-    "test:een": "playwright test src/tests/een --headed",
+    "test": "pnpm -r --filter=\"./apps/**\" test",
+    "test:gmail": "pnpm --filter @app/gmail test",
+    "test:een": "pnpm --filter @app/een test",
+    "test:calendar": "pnpm --filter @app/calendar test",
+    "test:sheets": "pnpm --filter @app/sheets test",
+    "test:docs": "pnpm --filter @app/docs test",
+    "test:drive": "pnpm --filter @app/drive test",
+    "test:slides": "pnpm --filter @app/slides test",
+    "test:chat": "pnpm --filter @app/chat test",
+    "typecheck": "pnpm -r exec tsc --noEmit",
+    "lint": "eslint . --max-warnings=0",
     "allure:generate": "allure generate test-outputs/allure-results --clean -o test-outputs/allure-report",
     "allure:open": "allure open test-outputs/allure-report",
-    "test:allure": "npm test && npm run allure:generate && npm run allure:open",
-    "test:calendar": "playwright test src/tests/calendar --headed",
-    "test:sheets": "playwright test src/tests/sheets --headed",
-    "test:docs": "playwright test src/tests/docs --headed",
-    "test:drive": "playwright test src/tests/drive --headed",
-    "test:slides": "playwright test src/tests/slides --headed",
-    "test:chat": "playwright test src/tests/chat --headed",
-    "test:debug": "playwright test --debug",
-    "report": "playwright show-report",
-    "ui": "playwright test --ui"
+    "ensure-output": "ts-node scripts/ensure-output.ts",
+    "sanitize-logs": "ts-node scripts/sanitize-logs.ts",
+    "notify": "ts-node scripts/notify.ts"
   },
   "keywords": [
     "playwright",
     "typescript",
     "test-automation",
     "pom",
-    "brivo"
+    "brivo",
+    "monorepo"
   ],
-  "author": "jeevan.g@een.com",
+  "author": "jeevan.g@brivo.com",
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.48.0",
@@ -37,11 +38,10 @@
     "allure-commandline": "^2.43.0",
     "allure-playwright": "^3.12.0",
     "chalk": "^4.1.2",
+    "eslint": "^9.12.0",
+    "@eslint/js": "^9.12.0",
+    "typescript-eslint": "^8.12.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.2"
-  },
-  "dependencies": {
-    "dotenv": "^16.4.5",
-    "winston": "^3.14.2"
   }
 }

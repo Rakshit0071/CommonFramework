@@ -1,0 +1,84 @@
+name: Playwright Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  CI: true
+
+jobs:
+  test:
+    name: ${{ matrix.app }} (shard ${{ matrix.shard }}/${{ matrix.totalShards }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        app: [gmail, een, calendar, sheets, docs, drive, slides, chat]
+        shard: [1, 2]
+        totalShards: [2]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Enable corepack (pnpm)
+        run: corepack enable
+
+      - name: Get pnpm store path
+        id: pnpm-cache
+        run: echo "STORE_PATH=$(corepack pnpm store path --silent)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: pnpm-store-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: pnpm-store-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: corepack pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: corepack pnpm --filter "@app/${{ matrix.app }}" exec playwright install --with-deps chromium
+
+      - name: Run ${{ matrix.app }} tests (shard ${{ matrix.shard }}/${{ matrix.totalShards }})
+        working-directory: apps/${{ matrix.app }}
+        env:
+          NO_SCREENSHOT_ON_FAILURE: '' # always capture screenshots in CI
+        run: corepack pnpm exec playwright test --shard=${{ matrix.shard }}/${{ matrix.totalShards }}
+
+      - name: CI guard - fail if result file is missing
+        if: always()
+        run: corepack pnpm exec ts-node scripts/ensure-output.ts apps/${{ matrix.app }}
+
+      - name: Strip credentials from logs/HAR before upload
+        if: always()
+        run: corepack pnpm exec ts-node scripts/sanitize-logs.ts apps/${{ matrix.app }}/test-outputs
+
+      - name: Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.app }}-shard-${{ matrix.shard }}-report
+          path: apps/${{ matrix.app }}/test-outputs
+          retention-days: 14
+
+      # Pixel-diff review (Argos CI / Percy) plugs in here once we have an
+      # account/API key for one of them: upload apps/<app>/test-outputs and
+      # the *-snapshots/ baselines to that service's GitHub Action at this
+      # point in the pipeline. Not wired up today — see Phase 3 notes in
+      # the architecture review response.
+
+      - name: Notify
+        if: always()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: corepack pnpm exec ts-node scripts/notify.ts "${{ matrix.app }}" "${{ job.status }}" "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

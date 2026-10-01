@@ -1,0 +1,23 @@
+{
+  "name": "@app/een",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "auth:setup": "ts-node src/setup/auth.setup.ts",
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:admin": "playwright test --project=admin-chromium",
+    "test:readonly": "playwright test --project=readonly-chromium"
+  },
+  "dependencies": {
+    "@common/test-utils": "workspace:*",
+    "@common/ui-components": "workspace:*",
+    "@common/auth": "workspace:*",
+    "@common/api-helpers": "workspace:*",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.48.0",
+    "ts-node": "^10.9.2"
+  }
+}
