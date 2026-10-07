@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "commonjs",
+    "lib": ["ESNext", "DOM"],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
+    "noEmit": true,
+    "types": ["node", "@playwright/test"],
+    "baseUrl": ".",
+    "paths": {
+      "@common/test-utils": ["packages/test-utils/src/index.ts"],
+      "@common/test-utils/*": ["packages/test-utils/src/*"],
+      "@common/ui-components": ["packages/ui-components/src/index.ts"],
+      "@common/ui-components/*": ["packages/ui-components/src/*"],
+      "@common/auth": ["packages/auth/src/index.ts"],
+      "@common/auth/*": ["packages/auth/src/*"],
+      "@common/api-helpers": ["packages/api-helpers/src/index.ts"],
+      "@common/api-helpers/*": ["packages/api-helpers/src/*"]
+    }
+  }
+}

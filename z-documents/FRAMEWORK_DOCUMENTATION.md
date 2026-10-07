@@ -2,6 +2,14 @@
 
 **TypeScript Playwright Test Automation Framework**
 
+> **Note (2026-10):** This document predates the pnpm monorepo conversion
+> (`packages/*` + `apps/*`) done in response to the team-lead architecture
+> review. The concepts below (POM, fixtures, StorageState, Winston, Allure)
+> are all still accurate, but file paths and commands referencing a single
+> `src/` tree are outdated. See the root [README.md](../README.md) for the
+> current structure and commands, and [LOCATOR_CONTRACT.md](../LOCATOR_CONTRACT.md)
+> for the locator governance rules this document doesn't cover.
+
 ---
 
 ## Table of Contents

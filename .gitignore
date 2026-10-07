@@ -17,6 +17,13 @@ test-outputs/
 allure-results/
 allure-report/
 
-# Authentication state (do not commit!)
+# Authentication state (do not commit!) - matches apps/*/.auth too
 .auth/
 !.auth/.gitkeep
+.session-cache.json
+
+# pnpm
+.pnpm-store/
+
+# Visual regression actual/diff output (baselines under *-snapshots/ ARE committed)
+test-results/
