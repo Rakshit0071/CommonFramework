@@ -12,8 +12,11 @@ export function registerScreenshotOnFailure(
 ): void {
   test.afterEach(async ({ page }, testInfo) => {
     if (testInfo.status !== testInfo.expectedStatus && !process.env.NO_SCREENSHOT_ON_FAILURE) {
+      // testInfo.outputPath() scopes the file to a directory unique per
+      // test (and per retry), so parallel workers running tests with
+      // similar titles never overwrite each other's screenshot.
       await page.screenshot({
-        path: `test-outputs/screenshots/${testInfo.title.replace(/\s+/g, '-')}.png`,
+        path: testInfo.outputPath('failure.png'),
         fullPage: true,
       });
     }
